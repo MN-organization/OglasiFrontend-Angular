@@ -16,8 +16,11 @@
         <ion-row>
             <ion-col push-lg="3" sizeLg="6" push-md="2" sizeMd="8" sizeXs="12">
                 <ion-slides pager="true">
-                    <ion-slide *ngFor="let slicica of oglas?.slika">
-                        <img [src]="slicica"/>
+<!--                    <ion-slide *ngFor="let slicica of oglas?.slika">-->
+<!--                        <img [src]="slicica"/>-->
+<!--                    </ion-slide>-->
+                    <ion-slide>
+                        <img [src]="oglas?.slika"/>
                     </ion-slide>
                 </ion-slides>
 

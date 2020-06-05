@@ -1,5 +1,5 @@
 export class OglasModel {
-    _id: string;
+    id: string;
     naslov: string;
     opis: string;
     cena: number;
@@ -11,7 +11,7 @@ export class OglasModel {
     snaga: number;
     kubikaza: number;
     menjac: string;
-    slika: string[];
+    slika: string;
     sacuvan = false;
 
     constructor() {

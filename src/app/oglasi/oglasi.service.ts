@@ -24,7 +24,7 @@ export class OglasiService {
 
     getMojiOglasi() {
         this.isLoadingSubject.next(true);
-        this.http.get<{ oglasi: OglasModel[], poruka: string }>(BackendConst.backendAddress + '/moji_oglasi')
+        this.http.get<{ oglasi: OglasModel[], poruka: string }>(BackendConst.backendAddress + '/api/oglasi/moji')
             .subscribe(podaci => {
                 this.isLoadingSubject.next(false);
                 this.promena.next(podaci.oglasi);
@@ -33,8 +33,9 @@ export class OglasiService {
 
     getAllOglasi() {
         this.isLoadingSubject.next(true);
-        this.http.get<{ oglasi: OglasModel[], poruka: string }>(BackendConst.backendAddress + '/oglasi')
+        this.http.get<{ oglasi: OglasModel[], poruka: string }>(BackendConst.backendAddress + '/api/oglasi')
             .subscribe(res => {
+                console.log(res);
                 this.promena.next(res.oglasi);
                 this.isLoadingSubject.next(false);
                 console.log(res.oglasi);
@@ -44,7 +45,7 @@ export class OglasiService {
 
     getOglas(id: string) {
         this.isLoadingSubject.next(true);
-        return this.http.get<{ oglas: OglasModel, poruka: string }>(BackendConst.backendAddress + '/oglasi/' + id).pipe(
+        return this.http.get<{ oglas: OglasModel, poruka: string }>(BackendConst.backendAddress + '/api/oglasi/' + id).pipe(
             map(res => {
                 return res.oglas;
                 this.isLoadingSubject.next(false);
@@ -53,7 +54,7 @@ export class OglasiService {
     }
 
     addOglas(oglas: OglasModel) {
-        this.http.post<{ oglas: OglasModel, poruka: string }>(BackendConst.backendAddress + '/oglasi/novi', {
+        this.http.post<{ oglas: OglasModel, poruka: string }>(BackendConst.backendAddress + '/api/oglasi/dodaj', {
             naslov: oglas.naslov,
             opis: oglas.opis,
             cena: oglas.cena,
@@ -66,8 +67,7 @@ export class OglasiService {
             kubikaza: oglas.kubikaza,
             menjac: oglas.menjac,
             slika: oglas.slika
-        }).subscribe(//(podaci) => {
-            //this.listaOglasa.push(podaci.oglas);}
+        }).subscribe(
         );
     }
 
@@ -128,7 +128,7 @@ export class OglasiService {
     }
 
     delete(oglasId: string) {
-        this.http.delete(BackendConst.backendAddress + '/oglasi/' + oglasId)
+        this.http.delete(BackendConst.backendAddress + '/api/oglasi/' + oglasId)
             .subscribe(poruka => {
                 console.log('deleted');
                 this.getMojiOglasi();
@@ -136,7 +136,7 @@ export class OglasiService {
     }
 
     updateOglas(oglas: OglasModel) {
-        this.http.put(BackendConst.backendAddress + '/oglasi/' + oglas._id, oglas)
+        this.http.post(BackendConst.backendAddress + '/api/oglasi/' + oglas.id, oglas)
             .subscribe(podaci => {
                 console.log(podaci);
             });
@@ -144,7 +144,7 @@ export class OglasiService {
 
     getSacuvaniOglasi() {
         this.isLoadingSubject.next(true);
-        this.http.get<{ oglasi: OglasModel[], poruka: string }>(BackendConst.backendAddress + '/sacuvani_oglasi')
+        this.http.get<{ oglasi: OglasModel[], poruka: string }>(BackendConst.backendAddress + '/api/oglasi/sacuvani')
             .subscribe(podaci => {
                 podaci.oglasi.forEach(og => {
                     og.sacuvan = true;
@@ -156,15 +156,15 @@ export class OglasiService {
 
     sacuvajOglas(idOglas: string) {
         console.log(idOglas);
-        this.http.put<{ poruka: string }>(BackendConst.backendAddress + '/sacuvani_oglasi', {oglasID: idOglas})
+        this.http.put<{ poruka: string }>(BackendConst.backendAddress + '/api/oglasi/sacuvaj', {oglasID: idOglas})
             .subscribe(podaci => {
                 console.log(podaci);
             });
     }
 
 
-    izbrisiSacuvanOglas(_id: string) {
-        this.http.put<{ poruka: string }>(BackendConst.backendAddress + '/sacuvani_oglasi_delete', {oglasID: _id})
+    izbrisiSacuvanOglas(id: string) {
+        this.http.put<{ poruka: string }>(BackendConst.backendAddress + '/api/oglasi/izbrisiSacuvan', {oglasID: id})
             .subscribe(podaci => {
                 console.log(podaci);
                 // this.getSacuvaniOglasi();

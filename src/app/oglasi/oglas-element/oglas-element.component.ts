@@ -32,16 +32,16 @@ export class OglasElementComponent implements OnInit {
     onDelete(e) {
         e.stopPropagation();
         e.preventDefault();
-        this.oglasiService.delete(this.oglas._id);
+        this.oglasiService.delete(this.oglas.id);
     }
 
     onSacuvaj(e) {
         e.stopPropagation();
         e.preventDefault();
         if (!this.isSacuvan) {
-            this.oglasiService.sacuvajOglas(this.oglas._id);
+            this.oglasiService.sacuvajOglas(this.oglas.id);
         } else {
-            this.oglasiService.izbrisiSacuvanOglas(this.oglas._id);
+            this.oglasiService.izbrisiSacuvanOglas(this.oglas.id);
         }
         this.isSacuvan = !this.isSacuvan;
     }

@@ -17,14 +17,17 @@ export class AuthService {
     greska = new Subject<string>();
 
     signup(email: string, password: string) {
-        return this.http.post<{ token: string }>(BackendConst.backendAddress + '/user/signup', {email, password});
+        return this.http.post<{ token: string }>(BackendConst.backendAddress + '/api/auth/signup', {email, password});
     }
 
     login(email: string, password: string) {
-        this.http.post<{ token: string }>(BackendConst.backendAddress + '/user/login', {email, password})
+        this.http.post<{ authenticationToken: string, refresh: string, expiresAt: string, email: string }>(BackendConst.backendAddress + '/api/auth/login', {email, password})
             .subscribe(podaci => {
-                this.token.next(podaci);
-                localStorage.setItem('userToken', podaci.token);
+                console.log( podaci);
+                console.log(podaci.authenticationToken);
+                const t = podaci.authenticationToken;
+                this.token.next({token: t});
+                localStorage.setItem('userToken', podaci.authenticationToken);
                 this.router.navigate(['/']);
             }, error => {
                 console.log(error.error.poruka);

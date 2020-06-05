@@ -45,7 +45,7 @@ export class DodajOglasPage implements OnInit {
         console.log(this.oglas);
 
         if (this.edit === true) {
-            this.oglas._id = this.idOglas;
+            this.oglas.id = this.idOglas;
             this.oglasiService.updateOglas(this.oglas);
         } else {
             this.oglasiService.addOglas(this.oglas);
