@@ -1,5 +1,5 @@
 export class OglasModel {
-    id: string;
+    id: number;
     naslov: string;
     opis: string;
     cena: number;

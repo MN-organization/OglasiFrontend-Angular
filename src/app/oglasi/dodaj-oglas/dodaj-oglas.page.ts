@@ -38,7 +38,7 @@ export class DodajOglasPage implements OnInit {
 
     edit = false;
 
-    idOglas: string;
+    idOglas: number;
 
     onSubmit() {
         this.oglas = this.form.value;
@@ -64,7 +64,7 @@ export class DodajOglasPage implements OnInit {
         this.route.paramMap.subscribe((paramMap) => {
             if (paramMap.has('id')) {
                 this.edit = true;
-                this.idOglas = paramMap.get('id');
+                this.idOglas = Number.parseInt(paramMap.get('id'));
                 this.oglasiService.getOglas(this.idOglas)
                     .subscribe((oglas) => {
                         this.form.patchValue({model: oglas.model});
@@ -85,7 +85,7 @@ export class DodajOglasPage implements OnInit {
                         });
                         this.onSelektovanaMarka2(oglas.model);
                         console.log(oglas.model);
-                        //this.form.patchValue({model: oglas.model});
+                        // this.form.patchValue({model: oglas.model});
                     });
             } else {
                 this.edit = false;
@@ -120,7 +120,7 @@ export class DodajOglasPage implements OnInit {
 
     onSelektovanaMarka2(model: string) {
         this.izabran = this.form.value.marka;
-        //popunjavanje dropdowna za model
+        // popunjavanje dropdowna za model
         for (const m of this.marke) {
             if (m.naziv === this.izabran) {
                 this.selectedMarke = m.model;

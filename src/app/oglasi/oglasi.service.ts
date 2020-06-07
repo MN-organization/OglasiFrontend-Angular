@@ -19,6 +19,8 @@ export class OglasiService {
 
     isLoadingSubject = new Subject<boolean>();
 
+    kriterijumi = '';
+
     constructor(private http: HttpClient) {
     }
 
@@ -43,12 +45,12 @@ export class OglasiService {
     }
 
 
-    getOglas(id: string) {
+    getOglas(id: number) {
         this.isLoadingSubject.next(true);
         return this.http.get<{ oglas: OglasModel, poruka: string }>(BackendConst.backendAddress + '/api/oglasi/' + id).pipe(
             map(res => {
-                return res.oglas;
                 this.isLoadingSubject.next(false);
+                return res.oglas;
             })
         );
     }
@@ -72,62 +74,71 @@ export class OglasiService {
     }
 
 
+    dodajKriterijum(kriterijum: string) {
+        if (this.kriterijumi === '') {
+            this.kriterijumi = kriterijum;
+        } else {
+            this.kriterijumi = this.kriterijumi + ' AND ' + kriterijum;
+        }
+    }
+
     pretrazi(forma: any) {
-        let params = new HttpParams();
+        this.kriterijumi = '';
         if (forma.marka) {
-            params = params.append('marka', forma.marka);
+            this.dodajKriterijum('marka:' + forma.marka);
         }
         if (forma.model) {
-            params = params.append('model', forma.model);
+            this.dodajKriterijum('model:' + forma.model);
         }
         if (forma.gorivo) {
-            params = params.append('gorivo', forma.gorivo);
+            this.dodajKriterijum('gorivo:' + forma.gorivo);
         }
         if (forma.cenaOd) {
-            params = params.append('cenaOd', forma.cenaOd);
+            this.dodajKriterijum('cena>' + forma.cenaOd);
         }
         if (forma.cenaDo) {
-            params = params.append('cenaDo', forma.cenaDo);
+            this.dodajKriterijum('cena<' + forma.cenaDo);
         }
         if (forma.kmOd) {
-            params = params.append('kmOd', forma.kmOd);
+            this.dodajKriterijum('kilometraza>' + forma.kmOd);
         }
         if (forma.kmDo) {
-            params = params.append('kmDo', forma.kmDo);
+            this.dodajKriterijum('kilometraza<' + forma.kmDo);
         }
         if (forma.ccmOd) {
-            params = params.append('ccmOd', forma.ccmOd);
+            this.dodajKriterijum('kubikaza>' + forma.ccmOd);
         }
         if (forma.ccmDo) {
-            params = params.append('ccmDo', forma.ccmDo);
+            this.dodajKriterijum('kubikaza<' + forma.ccmDo);
         }
         if (forma.ksOd) {
-            params = params.append('ksOd', forma.ksOd);
+            this.dodajKriterijum('snaga>' + forma.ksOd);
         }
         if (forma.ksDo) {
-            params = params.append('ksDo', forma.ksDo);
+            this.dodajKriterijum('snaga<' + forma.ksDo);
         }
         if (forma.godOd) {
-            params = params.append('godOd', forma.godOd);
+            this.dodajKriterijum('godiste>' + forma.godOd);
         }
         if (forma.godDo) {
-            params = params.append('godDo', forma.godDo);
+            this.dodajKriterijum('godiste<' + forma.godDo);
         }
         if (forma.menjac) {
-            params = params.append('menjac', forma.menjac);
+            this.dodajKriterijum('menjac:>' + forma.menjac);
         }
+
         this.isLoadingSubject.next(true);
-        return this.http.get<{ oglas: OglasModel[], poruka: string }>(BackendConst.backendAddress + '/oglasi/pretraga', {params}).subscribe(
+        return this.http.get<{ oglasi: OglasModel[], poruka: string }>(BackendConst.backendAddress + '/api/oglasi/pretraga?search=(' + this.kriterijumi + ')').subscribe(
             (response) => {
                 console.log(response);
                 this.isLoadingSubject.next(false);
-                this.listaOglasaPretraga = response.oglas;
+                this.listaOglasaPretraga = response.oglasi;
                 this.promena.next(this.listaOglasaPretraga);
             }
         );
     }
 
-    delete(oglasId: string) {
+    delete(oglasId: number) {
         this.http.delete(BackendConst.backendAddress + '/api/oglasi/' + oglasId)
             .subscribe(poruka => {
                 console.log('deleted');
@@ -154,17 +165,17 @@ export class OglasiService {
             });
     }
 
-    sacuvajOglas(idOglas: string) {
+    sacuvajOglas(idOglas: number) {
         console.log(idOglas);
-        this.http.put<{ poruka: string }>(BackendConst.backendAddress + '/api/oglasi/sacuvaj', {oglasID: idOglas})
+        this.http.get<{ poruka: string }>(BackendConst.backendAddress + '/api/oglasi/sacuvaj/' + idOglas)
             .subscribe(podaci => {
                 console.log(podaci);
             });
     }
 
 
-    izbrisiSacuvanOglas(id: string) {
-        this.http.put<{ poruka: string }>(BackendConst.backendAddress + '/api/oglasi/izbrisiSacuvan', {oglasID: id})
+    izbrisiSacuvanOglas(id: number) {
+        this.http.get<{ poruka: string }>(BackendConst.backendAddress + '/api/oglasi/izbrisiSacuvan/' + id)
             .subscribe(podaci => {
                 console.log(podaci);
                 // this.getSacuvaniOglasi();

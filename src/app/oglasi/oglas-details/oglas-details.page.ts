@@ -11,7 +11,7 @@ import {ActivatedRoute} from '@angular/router';
 export class OglasDetailsPage implements OnInit {
 
     @Input() public oglas: OglasModel;
-    oglasId: string;
+    oglasId: number;
 
     constructor(private oglasiService: OglasiService,
                 private activatedRoute: ActivatedRoute) {
