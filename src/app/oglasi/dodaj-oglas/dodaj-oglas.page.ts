@@ -1,10 +1,12 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {FormControl, FormGroup, NgForm} from '@angular/forms';
 import {OglasModel} from '../../modeli/oglas.model';
 import {OglasiService} from '../oglasi.service';
 import {MarkaModelService} from '../marka-model.service';
 import {Subscription} from 'rxjs';
 import {ActivatedRoute, Router} from '@angular/router';
+
+declare var paypal;
 
 @Component({
     selector: 'app-dodaj-oglas',
@@ -40,6 +42,12 @@ export class DodajOglasPage implements OnInit {
 
     idOglas: number;
 
+    @ViewChild('paypal', {static: true}) paypalElement: ElementRef;
+
+    paidFor = false;
+
+    popunjenaForma = false;
+
     onSubmit() {
         this.oglas = this.form.value;
         console.log(this.oglas);
@@ -48,10 +56,12 @@ export class DodajOglasPage implements OnInit {
             this.oglas.id = this.idOglas;
             this.oglasiService.updateOglas(this.oglas);
         } else {
-            this.oglasiService.addOglas(this.oglas);
+            this.popunjenaForma = true;
+
+            // this.oglasiService.addOglas(this.oglas);
         }
-        this.form.reset();
-        this.router.navigate(['/moji_oglasi']);
+        // this.form.reset();
+        // this.router.navigate(['/moji_oglasi']);
     }
 
     ngOnInit(): void {
@@ -106,6 +116,35 @@ export class DodajOglasPage implements OnInit {
             slika: new FormControl(null),
             snaga: new FormControl(null)
         });
+
+        paypal
+            .Buttons({
+                createOrder: (data, actions) => {
+                    return actions.order.create({
+                        purchase_units: [
+                            {
+                                description: 'bas super oglas',
+                                amount: {
+                                    currency_code: 'USD',
+                                    value: 2
+                                }
+                            }
+                        ]
+                    });
+                },
+                onApprove: async (data, actions) => {
+                    const order = await actions.order.capture();
+                    this.paidFor = true;
+                    console.log(order);
+                    this.oglasiService.addOglas(this.oglas);
+                    this.popunjenaForma = false;
+                    // capture treba da se odradi na beku i ako uspe onda se dodaje u bazu
+                },
+                onError: err => {
+                    console.log(err);
+                }
+            })
+            .render(this.paypalElement.nativeElement);
     }
 
     onSelektovanaMarka(e) {
