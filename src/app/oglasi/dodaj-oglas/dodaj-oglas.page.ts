@@ -1,5 +1,5 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {FormControl, FormGroup, NgForm} from '@angular/forms';
+import {FormControl, FormGroup, NgForm, Validators} from '@angular/forms';
 import {OglasModel} from '../../modeli/oglas.model';
 import {OglasiService} from '../oglasi.service';
 import {MarkaModelService} from '../marka-model.service';
@@ -48,6 +48,8 @@ export class DodajOglasPage implements OnInit {
 
     popunjenaForma = false;
 
+    isLoading = false;
+
     onSubmit() {
         this.oglas = this.form.value;
         console.log(this.oglas);
@@ -80,18 +82,18 @@ export class DodajOglasPage implements OnInit {
                         this.form.patchValue({model: oglas.model});
                         // this.oglas._id = oglas._id;
                         this.form = new FormGroup({
-                            naslov: new FormControl(oglas.naslov),
-                            opis: new FormControl(oglas.opis),
-                            marka: new FormControl(oglas.marka),
-                            model: new FormControl(oglas.model),
-                            cena: new FormControl(oglas.cena),
-                            gorivo: new FormControl(oglas.gorivo),
-                            kilometraza: new FormControl(oglas.kilometraza),
-                            kubikaza: new FormControl(oglas.kubikaza),
-                            godiste: new FormControl(oglas.godiste + ''),
-                            menjac: new FormControl(oglas.menjac),
-                            slika: new FormControl(oglas.slika),
-                            snaga: new FormControl(oglas.snaga)
+                            naslov: new FormControl(oglas.naslov, Validators.required),
+                            opis: new FormControl(oglas.opis, Validators.required),
+                            marka: new FormControl(oglas.marka, Validators.required),
+                            model: new FormControl(oglas.model, Validators.required),
+                            cena: new FormControl(oglas.cena, Validators.required),
+                            gorivo: new FormControl(oglas.gorivo, Validators.required),
+                            kilometraza: new FormControl(oglas.kilometraza, Validators.required),
+                            kubikaza: new FormControl(oglas.kubikaza, Validators.required),
+                            godiste: new FormControl(oglas.godiste + '', Validators.required),
+                            menjac: new FormControl(oglas.menjac, Validators.required),
+                            slika: new FormControl(oglas.slika, Validators.required),
+                            snaga: new FormControl(oglas.snaga, Validators.required)
                         });
                         this.onSelektovanaMarka2(oglas.model);
                         console.log(oglas.model);
@@ -103,18 +105,18 @@ export class DodajOglasPage implements OnInit {
         });
 
         this.form = new FormGroup({
-            naslov: new FormControl(null),
-            opis: new FormControl(null),
-            marka: new FormControl(null),
-            model: new FormControl(null),
-            cena: new FormControl(null),
-            gorivo: new FormControl(null),
-            kilometraza: new FormControl(null),
-            kubikaza: new FormControl(null),
-            godiste: new FormControl(null),
-            menjac: new FormControl(null),
-            slika: new FormControl(null),
-            snaga: new FormControl(null)
+            naslov: new FormControl(null, Validators.required),
+            opis: new FormControl(null, Validators.required),
+            marka: new FormControl(null, Validators.required),
+            model: new FormControl(null, Validators.required),
+            cena: new FormControl(null, Validators.required),
+            gorivo: new FormControl(null, Validators.required),
+            kilometraza: new FormControl(null, Validators.required),
+            kubikaza: new FormControl(null, Validators.required),
+            godiste: new FormControl(null, Validators.required),
+            menjac: new FormControl(null, Validators.required),
+            slika: new FormControl(null, Validators.required),
+            snaga: new FormControl(null, Validators.required)
         });
 
         paypal
@@ -133,11 +135,16 @@ export class DodajOglasPage implements OnInit {
                     });
                 },
                 onApprove: async (data, actions) => {
+                    console.log(data);
+                    console.log(actions);
+                    this.isLoading = true;
                     const order = await actions.order.capture();
                     this.paidFor = true;
                     console.log(order);
                     this.oglasiService.addOglas(this.oglas);
                     this.popunjenaForma = false;
+                    this.isLoading = false;
+                    this.form.reset();
                     // capture treba da se odradi na beku i ako uspe onda se dodaje u bazu
                 },
                 onError: err => {
@@ -167,4 +174,11 @@ export class DodajOglasPage implements OnInit {
         }
         this.form.patchValue({model});
     }
+
+    ionViewWillEnter() {
+        this.paidFor = false;
+        this.isLoading = false;
+        this.popunjenaForma = false;
+    }
+
 }

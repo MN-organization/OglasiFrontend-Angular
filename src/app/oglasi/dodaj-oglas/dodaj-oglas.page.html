@@ -119,9 +119,17 @@
             </div>
         </div>
     </div>
-    <div *ngIf=paidFor>
-        <h1>Yay, you bought a sweet couch!</h1>
-        <!--        <img src="assets/giphy.gif">-->
+    <div *ngIf=paidFor class="d-flex flex-column align-items-sm-center justify-content-center text-center">
+        <h1 class="ml-2">Vas oglas je uspesno objavljen!</h1>
+        <ion-icon id="ikonica" name="checkmark-circle-outline" class=""></ion-icon>
+        <ion-button routerLink="/moji_oglasi">Pregledaj vase oglas</ion-button>
     </div>
-    <div [hidden]="!paidFor && !popunjenaForma" #paypal></div>
+    <ion-spinner name="lines" color="primary" *ngIf="isLoading" id="spiner">
+
+    </ion-spinner>
+    <div [hidden]="(!paidFor && !popunjenaForma) || paidFor || isLoading"
+         class="d-flex flex-column justify-content-center text-center">
+        <h2 class="display-4 ml-2 ">Izaberite nacin placanja:</h2>
+        <div #paypal class="mt-4"></div>
+    </div>
 </ion-content>
