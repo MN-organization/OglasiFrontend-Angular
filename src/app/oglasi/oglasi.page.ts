@@ -1,8 +1,9 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {OglasiService} from './oglasi.service';
 import {OglasModel} from '../modeli/oglas.model';
 import {Router} from '@angular/router';
 import {Subscription} from 'rxjs';
+import {SlikaDodavanje} from '../modeli/slika.model';
 
 @Component({
     selector: 'app-oglasi',
@@ -24,6 +25,10 @@ export class OglasiPage implements OnInit, OnDestroy {
     isLoading = false;
 
     isloadingSub: Subscription;
+
+    listaSlika: SlikaDodavanje[] = [];
+
+    @ViewChild('fileinput', {static: true}) fileinput: ElementRef;
 
     constructor(private oglasiService: OglasiService,
                 private route: Router) {
@@ -55,7 +60,7 @@ export class OglasiPage implements OnInit, OnDestroy {
             this.oglasi = this.oglasiService.listaOglasaPretraga;
             setTimeout(() => {
                 this.isLoading = false;
-            }, 500);//ako za 500ms ne stignu novi rezultati pretrage,prikaze stare
+            }, 500); // ako za 500ms ne stignu novi rezultati pretrage,prikaze stare
         } else {
             this.oglasiService.getSacuvaniOglasi();
             this.naslov = 'Sacuvani oglasi';
@@ -72,4 +77,39 @@ export class OglasiPage implements OnInit, OnDestroy {
     }
 
 
+
+    onSelectFile(event: Event) {
+        const files = (event.target as HTMLInputElement).files;
+        if (files && files[0]) {
+            // const reader = new FileReader();
+            // tslint:disable-next-line:prefer-for-of
+            for (let i = 0; i < files.length; i++) {
+                const reader = new FileReader();
+                reader.readAsDataURL(files[i]); // read file as data url
+                console.log('ucitan fajl ' + i);
+                reader.onload =  () => { // called once readAsDataURL is completed
+                     this.oglasiService.posaljiSliku(reader.result)
+                        .subscribe(hes => {
+                            console.log('usao u sub');
+                            console.log(hes);
+                            const readerResult = reader.result.toString();
+                            this.listaSlika.push(new SlikaDodavanje(hes, readerResult));
+                        });
+                };
+                for (const lista of this.listaSlika) {
+                    console.log(lista);
+                }
+            }
+        }
+    }
+
+    obrisiSliku(hes: string) {
+        this.oglasiService.obrisiSliku(hes);
+        for (let i = 0; i < this.listaSlika.length; i++) {
+            if (this.listaSlika[i].hes === hes) {
+                this.listaSlika.splice(i, 1);
+            }
+        }
+        console.log(this.fileinput.nativeElement.files);
+    }
 }

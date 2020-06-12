@@ -181,4 +181,19 @@ export class OglasiService {
                 // this.getSacuvaniOglasi();
             });
     }
+
+    posaljiSliku(slika: string | ArrayBuffer) {
+        return this.http.post<{hes: string}>
+        (BackendConst.backendAddress + '/api/slike/', slika).pipe(
+            map(res => {
+                return res.hes;
+            }));
+    }
+
+    obrisiSliku(hes: string) {
+        this.http.delete(BackendConst.backendAddress + '/api/slike/obrisi/' + hes)
+            .subscribe(podaci => {
+                console.log(podaci);
+            });
+    }
 }
