@@ -11,7 +11,7 @@ export class OglasModel {
     snaga: number;
     kubikaza: number;
     menjac: string;
-    slika: string;
+    slike: string[];
     sacuvan = false;
 
     constructor() {

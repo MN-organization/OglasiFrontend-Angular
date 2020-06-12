@@ -68,7 +68,7 @@ export class OglasiService {
             snaga: oglas.snaga,
             kubikaza: oglas.kubikaza,
             menjac: oglas.menjac,
-            slika: oglas.slika
+            slike: oglas.slike
         }).subscribe(
         );
     }
@@ -184,14 +184,14 @@ export class OglasiService {
 
     posaljiSliku(slika: string | ArrayBuffer) {
         return this.http.post<{hes: string}>
-        (BackendConst.backendAddress + '/api/slike/', slika).pipe(
+        (BackendConst.backendAddress + '/api/oglasi/slike/', slika).pipe(
             map(res => {
                 return res.hes;
             }));
     }
 
     obrisiSliku(hes: string) {
-        this.http.delete(BackendConst.backendAddress + '/api/slike/obrisi/' + hes)
+        this.http.delete(BackendConst.backendAddress + '/api/oglasi/slike/obrisi/' + hes)
             .subscribe(podaci => {
                 console.log(podaci);
             });

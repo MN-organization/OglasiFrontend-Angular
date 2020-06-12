@@ -32,15 +32,15 @@
                 </div>
             </ion-col>
       </ion-row>
-<!--        komentar-->
-        <div>
-            <div *ngFor="let slika of listaSlika">
-                <img [src]="slika.slika" height="100" width="200"> <br/>
-                <button (click)="obrisiSliku(slika.hes)"><ion-icon name="trash-outline"></ion-icon></button>
-            </div>
-            <input type='file' (change)="onSelectFile($event)" multiple #fileinput>
-        </div>
-<!--        komentar-->
+<!--&lt;!&ndash;        komentar&ndash;&gt;-->
+<!--        <div>-->
+<!--            <div *ngFor="let slika of listaSlika">-->
+<!--                <img [src]="slika.slika" height="100" width="200"> <br/>-->
+<!--                <button (click)="obrisiSliku(slika.hes)"><ion-icon name="trash-outline"></ion-icon></button>-->
+<!--            </div>-->
+<!--            <input type='file' (change)="onSelectFile($event)" multiple #fileinput>-->
+<!--        </div>-->
+<!--&lt;!&ndash;        komentar&ndash;&gt;-->
 
 
       <ion-row *ngIf="!isLoading">

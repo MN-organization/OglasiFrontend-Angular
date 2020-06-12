@@ -3,12 +3,12 @@
         <ion-row >
             <ion-col size-md="6" size-sm="6" size-xs="12">
                 <ion-slides pager="true">
-<!--                    <ion-slide *ngFor="let slicica of oglas.slika">-->
-<!--                        <img class="img-responsive" [src]="slicica">-->
-<!--                    </ion-slide>-->
-                    <ion-slide>
-                        <img class="img-responsive" [src]="oglas.slika">
+                    <ion-slide *ngFor="let slicica of oglas.slike">
+                        <img class="img-responsive" [src]="slicica.slika">
                     </ion-slide>
+<!--                    <ion-slide>-->
+<!--                        <img class="img-responsive" [src]="oglas.slika">-->
+<!--                    </ion-slide>-->
                 </ion-slides>
             </ion-col>
             <ion-col size-md="6" size-sm="6" size-xs="12">

@@ -5,6 +5,7 @@ import {OglasiService} from '../oglasi.service';
 import {MarkaModelService} from '../marka-model.service';
 import {Subscription} from 'rxjs';
 import {ActivatedRoute, Router} from '@angular/router';
+import {SlikaDodavanje} from '../../modeli/slika.model';
 
 declare var paypal;
 
@@ -50,6 +51,12 @@ export class DodajOglasPage implements OnInit {
 
     isLoading = false;
 
+    listaSlika: SlikaDodavanje[] = [];
+
+    ucitavanjeSlika = false;
+
+    @ViewChild('fileinput', {static: true}) fileinput: ElementRef;
+
     onSubmit() {
         this.oglas = this.form.value;
         console.log(this.oglas);
@@ -58,6 +65,9 @@ export class DodajOglasPage implements OnInit {
             this.oglas.id = this.idOglas;
             this.oglasiService.updateOglas(this.oglas);
         } else {
+            this.oglas.slike = this.listaSlika.map(slikaDod => {
+                return slikaDod.hes;
+            });
             this.popunjenaForma = true;
 
             // this.oglasiService.addOglas(this.oglas);
@@ -79,6 +89,7 @@ export class DodajOglasPage implements OnInit {
                 this.idOglas = Number.parseInt(paramMap.get('id'));
                 this.oglasiService.getOglas(this.idOglas)
                     .subscribe((oglas) => {
+                        this.oglas = oglas;
                         this.form.patchValue({model: oglas.model});
                         // this.oglas._id = oglas._id;
                         this.form = new FormGroup({
@@ -92,7 +103,7 @@ export class DodajOglasPage implements OnInit {
                             kubikaza: new FormControl(oglas.kubikaza, Validators.required),
                             godiste: new FormControl(oglas.godiste + '', Validators.required),
                             menjac: new FormControl(oglas.menjac, Validators.required),
-                            slika: new FormControl(oglas.slika, Validators.required),
+                            // slika: new FormControl(oglas.slika, Validators.required),
                             snaga: new FormControl(oglas.snaga, Validators.required)
                         });
                         this.onSelektovanaMarka2(oglas.model);
@@ -115,7 +126,7 @@ export class DodajOglasPage implements OnInit {
             kubikaza: new FormControl(null, Validators.required),
             godiste: new FormControl(null, Validators.required),
             menjac: new FormControl(null, Validators.required),
-            slika: new FormControl(null, Validators.required),
+            // slika: new FormControl(null, Validators.required),
             snaga: new FormControl(null, Validators.required)
         });
 
@@ -181,4 +192,71 @@ export class DodajOglasPage implements OnInit {
         this.popunjenaForma = false;
     }
 
+    onSelectFile(event: Event) {
+        this.ucitavanjeSlika = true;
+        const files = (event.target as HTMLInputElement).files;
+        if (files && files[0]) {
+            // const reader = new FileReader();
+            // tslint:disable-next-line:prefer-for-of
+            for (let i = 0; i < files.length; i++) {
+                const reader = new FileReader();
+                reader.readAsDataURL(files[i]); // read file as data url
+                console.log('ucitan fajl ' + i);
+                reader.onload =  () => { // called once readAsDataURL is completed
+                    this.oglasiService.posaljiSliku(reader.result)
+                        .subscribe(hes => {
+                            console.log('usao u sub');
+                            console.log(hes);
+                            const readerResult = reader.result.toString();
+                            this.listaSlika.push(new SlikaDodavanje(hes, readerResult));
+                        });
+                };
+                for (const lista of this.listaSlika) {
+                    console.log(lista);
+                }
+            }
+        }
+        this.ucitavanjeSlika = false;
+    }
+
+    obrisiSliku(hes: string) {
+        this.oglasiService.obrisiSliku(hes);
+        for (let i = 0; i < this.listaSlika.length; i++) {
+            if (this.listaSlika[i].hes === hes) {
+                this.listaSlika.splice(i, 1);
+            }
+        }
+        // console.log(this.fileinput.nativeElement.files);
+    }
+
+    obrisiSlikuEdit(idOglas: number, idSlike: number) {
+
+    }
+
+    onSelectFileEdit(event: Event) {
+        // this.ucitavanjeSlika = true;
+        const files = (event.target as HTMLInputElement).files;
+        if (files && files[0]) {
+            // const reader = new FileReader();
+            // tslint:disable-next-line:prefer-for-of
+            for (let i = 0; i < files.length; i++) {
+                const reader = new FileReader();
+                reader.readAsDataURL(files[i]); // read file as data url
+                console.log('ucitan fajl ' + i);
+                reader.onload =  () => { // called once readAsDataURL is completed
+                    this.oglasiService.posaljiSliku(reader.result)
+                        .subscribe(hes => {
+                            console.log('usao u sub');
+                            console.log(hes);
+                            const readerResult = reader.result.toString();
+                            this.listaSlika.push(new SlikaDodavanje(hes, readerResult));
+                        });
+                };
+                // for (const lista of this.listaSlika) {
+                //     console.log(lista);
+                // }
+            }
+        }
+        // this.ucitavanjeSlika = false;
+    }
 }
