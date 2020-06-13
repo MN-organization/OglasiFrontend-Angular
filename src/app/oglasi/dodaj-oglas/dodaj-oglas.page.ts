@@ -1,5 +1,5 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {FormControl, FormGroup, NgForm, Validators} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup, NgForm, Validators} from '@angular/forms';
 import {OglasModel} from '../../modeli/oglas.model';
 import {OglasiService} from '../oglasi.service';
 import {MarkaModelService} from '../marka-model.service';
@@ -7,6 +7,8 @@ import {Subscription} from 'rxjs';
 import {ActivatedRoute, Router} from '@angular/router';
 import {SlikaDodavanje} from '../../modeli/slikaDodavanje.model';
 import {Slika} from '../../modeli/slika.model';
+import {Marka} from '../../modeli/marka.model';
+import {Model} from '../../modeli/model.model';
 
 declare var paypal;
 
@@ -20,13 +22,14 @@ export class DodajOglasPage implements OnInit {
     constructor(private oglasiService: OglasiService,
                 private markaModelService: MarkaModelService,
                 private router: Router,
-                private route: ActivatedRoute) {
+                private route: ActivatedRoute,
+                private fb: FormBuilder) {
     }
 
     // @ViewChild('f', {static: false}) addForm: NgForm;
     form: FormGroup;
 
-    izabran: string;
+    izabran: Marka;
 
     oglas: OglasModel = null;
 
@@ -36,9 +39,9 @@ export class DodajOglasPage implements OnInit {
 
     gorivo = ['benzin', 'dizel', 'tng'];
 
-    marke = [];
+    marke: Marka[] = [];
 
-    selectedMarke = [];
+    selectedMarke: Model[];
 
     edit = false;
 
@@ -57,6 +60,8 @@ export class DodajOglasPage implements OnInit {
     ucitavanjeSlika = false;
 
     @ViewChild('fileinput', {static: true}) fileinput: ElementRef;
+
+    selektovanaMarka: Marka;
 
     onSubmit() {
         this.oglas = this.form.value;
@@ -85,45 +90,49 @@ export class DodajOglasPage implements OnInit {
         for (let i = godina; i > 1913; i--) {
             this.godista.push(i);
         }
-        this.marke = this.markaModelService.getAll();
 
-        this.route.paramMap.subscribe((paramMap) => {
-            if (paramMap.has('id')) {
-                this.edit = true;
-                this.idOglas = Number.parseInt(paramMap.get('id'));
-                this.oglasiService.getOglas(this.idOglas)
-                    .subscribe((oglas) => {
-                        this.oglas = oglas;
-                        // this.oglas.slike.forEach(slika => {
-                        //     let slicica;
-                        //     slicica.id = slika.id;
-                        //     slicica.slika = slika.slika;
-                        //     this.listaSlika.push({hes: slika.id, slika: slika.slika});
-                        // }); ovo je sluzilo da bismo prikazali slike koje su novo-dodate u editu
-                        this.form.patchValue({model: oglas.model});
-                        // this.oglas._id = oglas._id;
-                        this.form = new FormGroup({
-                            naslov: new FormControl(oglas.naslov, Validators.required),
-                            opis: new FormControl(oglas.opis, Validators.required),
-                            marka: new FormControl(oglas.marka, Validators.required),
-                            model: new FormControl(oglas.model, Validators.required),
-                            cena: new FormControl(oglas.cena, Validators.required),
-                            gorivo: new FormControl(oglas.gorivo, Validators.required),
-                            kilometraza: new FormControl(oglas.kilometraza, Validators.required),
-                            kubikaza: new FormControl(oglas.kubikaza, Validators.required),
-                            godiste: new FormControl(oglas.godiste + '', Validators.required),
-                            menjac: new FormControl(oglas.menjac, Validators.required),
-                            // slika: new FormControl(oglas.slika, Validators.required),
-                            snaga: new FormControl(oglas.snaga, Validators.required)
-                        });
-                        this.onSelektovanaMarka2(oglas.model);
-                        console.log(oglas.model);
-                        // this.form.patchValue({model: oglas.model});
-                    });
-            } else {
-                this.edit = false;
-            }
-        });
+        this.markaModelService.getAll()
+            .subscribe(podaci => {
+                this.marke = podaci;
+                this.route.paramMap.subscribe((paramMap) => {
+                    if (paramMap.has('id')) {
+                        this.edit = true;
+                        this.idOglas = Number.parseInt(paramMap.get('id'));
+                        this.oglasiService.getOglas(this.idOglas)
+                            .subscribe((oglas) => {
+                                this.oglas = oglas;
+                                // this.oglas.slike.forEach(slika => {
+                                //     let slicica;
+                                //     slicica.id = slika.id;
+                                //     slicica.slika = slika.slika;
+                                //     this.listaSlika.push({hes: slika.id, slika: slika.slika});
+                                // }); ovo je sluzilo da bismo prikazali slike koje su novo-dodate u editu
+
+                                this.onSelektovanaMarka2(this.oglas.model);
+
+                                this.form = new FormGroup({
+                                    naslov: new FormControl(oglas.naslov, Validators.required),
+                                    opis: new FormControl(oglas.opis, Validators.required),
+                                    marka: new FormControl(oglas.model.marka, Validators.required),
+                                    model: new FormControl(oglas.model, Validators.required),
+                                    cena: new FormControl(oglas.cena, Validators.required),
+                                    gorivo: new FormControl(oglas.gorivo, Validators.required),
+                                    kilometraza: new FormControl(oglas.kilometraza, Validators.required),
+                                    kubikaza: new FormControl(oglas.kubikaza, Validators.required),
+                                    godiste: new FormControl(oglas.godiste + '', Validators.required),
+                                    menjac: new FormControl(oglas.menjac, Validators.required),
+                                    // slika: new FormControl(oglas.slika, Validators.required),
+                                    snaga: new FormControl(oglas.snaga, Validators.required)
+                                });
+
+                                console.log(oglas.model);
+
+                            });
+                    } else {
+                        this.edit = false;
+                    }
+                });
+            });
 
         this.form = new FormGroup({
             naslov: new FormControl(null, Validators.required),
@@ -176,24 +185,27 @@ export class DodajOglasPage implements OnInit {
     }
 
     onSelektovanaMarka(e) {
+        console.log('on selektovano 1');
+        console.log(e);
         this.form.controls.model.reset();
         this.izabran = e.detail.value;
-        for (const m of this.marke) {
-            if (m.naziv === this.izabran) {
-                this.selectedMarke = m.model;
-            }
+        if (e.detail.value !== '') {
+            this.markaModelService.getModeliZaMarku(this.izabran.id)
+                .subscribe(podaci => {
+                    this.selectedMarke = podaci;
+                });
         }
     }
 
-    onSelektovanaMarka2(model: string) {
-        this.izabran = this.form.value.marka;
-        // popunjavanje dropdowna za model
-        for (const m of this.marke) {
-            if (m.naziv === this.izabran) {
-                this.selectedMarke = m.model;
-            }
-        }
-        this.form.patchValue({model});
+    async onSelektovanaMarka2(model: Model) {
+        // this.izabran = this.form.value.marka;
+        console.log('on selektovano 2');
+        const markaId = model.marka.id;
+        await this.markaModelService.getModeliZaMarku(markaId)
+            .subscribe(podaci => {
+                this.selectedMarke = podaci;
+                this.form.patchValue({model: this.oglas.model});
+            });
     }
 
     ionViewWillEnter() {
@@ -212,7 +224,7 @@ export class DodajOglasPage implements OnInit {
                 const reader = new FileReader();
                 reader.readAsDataURL(files[i]); // read file as data url
                 console.log('ucitan fajl ' + i);
-                reader.onload =  () => { // called once readAsDataURL is completed
+                reader.onload = () => { // called once readAsDataURL is completed
                     this.oglasiService.posaljiSliku(reader.result)
                         .subscribe(hes => {
                             console.log('usao u sub');
@@ -246,6 +258,10 @@ export class DodajOglasPage implements OnInit {
                 this.oglas.slike.splice(i, 1);
             }
         }
+    }
+
+    compareMarke(m1: any, m2: any): boolean {
+        return m1 && m2 ? m1.id === m2.id : m1 === m2;
     }
 
     // onSelectFileEdit(event: Event) {

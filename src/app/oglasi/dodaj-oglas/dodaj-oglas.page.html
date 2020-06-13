@@ -42,17 +42,17 @@
 
                     <ion-item>
                         <ion-label>Marka</ion-label>
-                        <ion-select value="notifications" interface="action-sheet" name="marka" required (ionChange)="onSelektovanaMarka($event)"
+                        <ion-select [compareWith]="compareMarke" value="notifications" interface="action-sheet" name="marka" required (ionChange)="onSelektovanaMarka($event)"
                                     formControlName="marka">
                             <ion-select-option *ngFor="let marka of marke;let i=index"
-                                               >{{marka.naziv}}</ion-select-option>
+                                               [value]="marka">{{marka.marka}}</ion-select-option>
                         </ion-select>
                     </ion-item>
                     <ion-item>
                         <ion-label>Modeli</ion-label>
-                        <ion-select value="notifications" interface="action-sheet" formControlName="model"
+                        <ion-select [compareWith]="compareMarke" value="notifications" interface="action-sheet" formControlName="model"
                                     [disabled]=form.controls.marka.invalid>
-                            <ion-select-option *ngFor="let model of selectedMarke">{{model}}</ion-select-option>
+                            <ion-select-option *ngFor="let model of selectedMarke" [value]="model">{{model.model}}</ion-select-option>
                         </ion-select>
                     </ion-item>
                     <ion-item>

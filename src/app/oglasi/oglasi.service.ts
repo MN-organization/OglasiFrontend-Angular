@@ -60,7 +60,7 @@ export class OglasiService {
             naslov: oglas.naslov,
             opis: oglas.opis,
             cena: oglas.cena,
-            marka: oglas.marka,
+            marka: oglas.model.marka,
             model: oglas.model,
             godiste: oglas.godiste,
             kilometraza: oglas.kilometraza,
@@ -84,11 +84,12 @@ export class OglasiService {
 
     pretrazi(forma: any) {
         this.kriterijumi = '';
-        if (forma.marka) {
-            this.dodajKriterijum('marka:' + forma.marka);
+        if (forma.marka && !forma.model) {
+            this.dodajKriterijum('model.marka.id:' + forma.marka.id);
         }
         if (forma.model) {
-            this.dodajKriterijum('model:' + forma.model);
+            console.log(forma.model);
+            this.dodajKriterijum('model.id:' + forma.model.id);
         }
         if (forma.gorivo) {
             this.dodajKriterijum('gorivo:' + forma.gorivo);

@@ -3,6 +3,8 @@ import {FormControl, FormGroup} from '@angular/forms';
 import {MarkaModelService} from '../marka-model.service';
 import {OglasiService} from '../oglasi.service';
 import {Router} from '@angular/router';
+import {Marka} from '../../modeli/marka.model';
+import {Model} from '../../modeli/model.model';
 
 @Component({
     selector: 'app-pretraga',
@@ -13,7 +15,7 @@ export class PretragaPage implements OnInit {
 
     form: FormGroup;
 
-    izabran: string;
+    izabran: Marka;
 
     menjaci = ['Manuelni', 'Automatski'];
 
@@ -21,9 +23,9 @@ export class PretragaPage implements OnInit {
 
     gorivo = ['benzin', 'dizel', 'tng'];
 
-    marke = [];
+    marke: Marka[] = [];
 
-    selectedMarke = [];
+    selectedMarke: Model[] = [];
 
     constructor(private markaModelService: MarkaModelService, private oglasiService: OglasiService, private router: Router) {
     }
@@ -50,18 +52,31 @@ export class PretragaPage implements OnInit {
         for (let i = godina; i > 1913; i--) {
             this.godista.push(i);
         }
-        this.marke = this.markaModelService.getAll();
+        this.markaModelService.getAll()
+            .subscribe(podaci => {
+                this.marke = podaci;
+            });
 
     }
 
 
     onSelektovanaMarka(e) {
+        // this.form.controls.model.reset();
+        // this.izabran = e.detail.value;
+        // for (const m of this.marke) {
+        //     if (m.naziv === this.izabran) {
+        //         this.selectedMarke = m.model;
+        //     }
+        // }
+
+        // console.log('on selektovano 1');
         this.form.controls.model.reset();
         this.izabran = e.detail.value;
-        for (const m of this.marke) {
-            if (m.naziv === this.izabran) {
-                this.selectedMarke = m.model;
-            }
+        if (e.detail.value !== '') {
+            this.markaModelService.getModeliZaMarku(this.izabran.id)
+                .subscribe(podaci => {
+                    this.selectedMarke = podaci;
+                });
         }
     }
 
@@ -75,6 +90,7 @@ export class PretragaPage implements OnInit {
         this.form.patchValue({gorivo: null});
     }
     onMarkaCancel() {
+        console.log('marka cancel');
         this.form.patchValue({marka: null});
     }
     onModeliCancel() {

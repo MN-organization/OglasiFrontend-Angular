@@ -22,15 +22,15 @@
                                         formControlName="marka"
                                         (ionCancel)="onMarkaCancel()"
                             >
-                                <ion-select-option *ngFor="let marka of marke;let i=index"
-                                >{{marka.naziv}}</ion-select-option>
+                                <ion-select-option *ngFor="let marka of marke;let i=index" [value]="marka"
+                                >{{marka.marka}}</ion-select-option>
                             </ion-select>
                         </ion-item>
                         <ion-item>
                             <ion-label>Modeli</ion-label>
                             <ion-select value="notifications" interface="action-sheet" name="model"
                                         formControlName="model" [disabled]="form.get('marka').value===null" (ionCancel)="onModeliCancel()">
-                                <ion-select-option *ngFor="let model of selectedMarke">{{model}}</ion-select-option>
+                                <ion-select-option *ngFor="let model of selectedMarke" [value]="model">{{model.model}}</ion-select-option>
                             </ion-select>
                         </ion-item>
                         <ion-item>

@@ -1,12 +1,14 @@
 import {Slika} from './slika.model';
+import {Marka} from './marka.model';
+import {Model} from './model.model';
 
 export class OglasModel {
     id: number;
     naslov: string;
     opis: string;
     cena: number;
-    marka: string;
-    model: string;
+    // marka: Marka;
+    model: Model;
     godiste: number;
     kilometraza: number;
     gorivo: string;
