@@ -5,7 +5,8 @@ import {OglasiService} from '../oglasi.service';
 import {MarkaModelService} from '../marka-model.service';
 import {Subscription} from 'rxjs';
 import {ActivatedRoute, Router} from '@angular/router';
-import {SlikaDodavanje} from '../../modeli/slika.model';
+import {SlikaDodavanje} from '../../modeli/slikaDodavanje.model';
+import {Slika} from '../../modeli/slika.model';
 
 declare var paypal;
 
@@ -66,7 +67,10 @@ export class DodajOglasPage implements OnInit {
             this.oglasiService.updateOglas(this.oglas);
         } else {
             this.oglas.slike = this.listaSlika.map(slikaDod => {
-                return slikaDod.hes;
+                const slika: Slika = new Slika();
+                slika.slika = slikaDod.hes;
+                slika.id = null;
+                return slika;
             });
             this.popunjenaForma = true;
 
@@ -90,6 +94,12 @@ export class DodajOglasPage implements OnInit {
                 this.oglasiService.getOglas(this.idOglas)
                     .subscribe((oglas) => {
                         this.oglas = oglas;
+                        // this.oglas.slike.forEach(slika => {
+                        //     let slicica;
+                        //     slicica.id = slika.id;
+                        //     slicica.slika = slika.slika;
+                        //     this.listaSlika.push({hes: slika.id, slika: slika.slika});
+                        // }); ovo je sluzilo da bismo prikazali slike koje su novo-dodate u editu
                         this.form.patchValue({model: oglas.model});
                         // this.oglas._id = oglas._id;
                         this.form = new FormGroup({
@@ -230,33 +240,35 @@ export class DodajOglasPage implements OnInit {
     }
 
     obrisiSlikuEdit(idOglas: number, idSlike: number) {
-
-    }
-
-    onSelectFileEdit(event: Event) {
-        // this.ucitavanjeSlika = true;
-        const files = (event.target as HTMLInputElement).files;
-        if (files && files[0]) {
-            // const reader = new FileReader();
-            // tslint:disable-next-line:prefer-for-of
-            for (let i = 0; i < files.length; i++) {
-                const reader = new FileReader();
-                reader.readAsDataURL(files[i]); // read file as data url
-                console.log('ucitan fajl ' + i);
-                reader.onload =  () => { // called once readAsDataURL is completed
-                    this.oglasiService.posaljiSliku(reader.result)
-                        .subscribe(hes => {
-                            console.log('usao u sub');
-                            console.log(hes);
-                            const readerResult = reader.result.toString();
-                            this.listaSlika.push(new SlikaDodavanje(hes, readerResult));
-                        });
-                };
-                // for (const lista of this.listaSlika) {
-                //     console.log(lista);
-                // }
+        this.oglasiService.obrisiSlikuEdit(idOglas, idSlike);
+        for (let i = 0; i < this.oglas.slike.length; i++) {
+            if (this.oglas.slike[i].id === idSlike) {
+                this.oglas.slike.splice(i, 1);
             }
         }
-        // this.ucitavanjeSlika = false;
     }
+
+    // onSelectFileEdit(event: Event) {
+    //     // this.ucitavanjeSlika = true;
+    //     const files = (event.target as HTMLInputElement).files;
+    //     if (files && files[0]) {
+    //         // const reader = new FileReader();
+    //         // tslint:disable-next-line:prefer-for-of
+    //         for (let i = 0; i < files.length; i++) {
+    //             const reader = new FileReader();
+    //             reader.readAsDataURL(files[i]); // read file as data url
+    //             console.log('ucitan fajl ' + i);
+    //             reader.onload =  () => { // called once readAsDataURL is completed
+    //                 this.oglasiService.posaljiSlikuEdit(this.idOglas, reader.result)
+    //                     .subscribe(slika => {
+    //                         this.oglas.slike.push(slika.slika);
+    //                     });
+    //             };
+    //             // for (const lista of this.listaSlika) {
+    //             //     console.log(lista);
+    //             // }
+    //         }
+    //     }
+    //     // this.ucitavanjeSlika = false;
+    // }
 }

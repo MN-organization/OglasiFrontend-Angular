@@ -1,3 +1,5 @@
+import {Slika} from './slika.model';
+
 export class OglasModel {
     id: number;
     naslov: string;
@@ -11,7 +13,7 @@ export class OglasModel {
     snaga: number;
     kubikaza: number;
     menjac: string;
-    slike: string[];
+    slike: Slika[];
     sacuvan = false;
 
     constructor() {

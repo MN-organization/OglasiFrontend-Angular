@@ -14,19 +14,19 @@
         <div class="row">
             <div class="col-xs-12 col-sm-10 col-md-8 offset-sm-1 offset-md-2">
                 <!--        slike-->
-                <div class="row" [hidden]="this.edit">
+                <div class="row" *ngIf="!this.edit">
                     <div class="col-6" *ngFor="let slika of listaSlika">
                         <img [src]="slika.slika" height="100" width="200" (click)="obrisiSliku(slika.hes)"> <br/>
                         <button (click)="obrisiSliku(slika.hes)" style="margin-top: -100px"><ion-icon name="trash-outline"></ion-icon></button>
                     </div>
                     <input type='file' (change)="onSelectFile($event)" multiple #fileinput >
                 </div>
-                <div class="row" [hidden]="!this.edit">
+                <div class="row" *ngIf="this.edit">
                     <div class="col-6" *ngFor="let slika of oglas?.slike">
                         <img [src]="slika.slika" height="100" width="200" (click)="obrisiSliku(slika.hes)"> <br/>
                         <button (click)="obrisiSlikuEdit(idOglas, slika.id)" style="margin-top: -100px"><ion-icon name="trash-outline"></ion-icon></button>
                     </div>
-                    <input type='file' (change)="onSelectFileEdit($event)" multiple #fileinput >
+<!--                    <input type='file' (change)="onSelectFileEdit($event)" multiple #fileinput >-->
                 </div>
                 <!--        slike-->
                 <form (ngSubmit)="onSubmit()" [formGroup]="form">

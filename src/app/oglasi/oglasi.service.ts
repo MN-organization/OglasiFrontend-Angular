@@ -196,4 +196,18 @@ export class OglasiService {
                 console.log(podaci);
             });
     }
+
+
+    // posaljiSlikuEdit(idOglas: number, slika: string | ArrayBuffer) {
+    //     return this.http.post<{slika: {id: number, slika: string}, poruka: string}>
+    //     (BackendConst.backendAddress + '/api/oglasi/slike/edit/' + idOglas, slika)
+    //         .pipe(map( podaci => {
+    //             return podaci.slika;
+    //         }));
+    // }
+    obrisiSlikuEdit(idOglas: number, idSlike: number) {
+        this.http.delete
+        (BackendConst.backendAddress + '/api/oglasi/slike/obrisi/' + idOglas + '/' + idSlike)
+            .subscribe();
+    }
 }

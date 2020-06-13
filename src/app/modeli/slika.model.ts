@@ -1,5 +1,7 @@
-export class SlikaDodavanje {
-    constructor(public hes: string,
-                public slika: string | ArrayBuffer) {
+export class Slika {
+    public id: number;
+    public slika: string;
+
+    constructor() {
     }
 }
