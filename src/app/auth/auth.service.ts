@@ -17,7 +17,7 @@ export class AuthService {
     greska = new Subject<string>();
 
     signup(email: string, password: string) {
-        return this.http.post<{ token: string }>(BackendConst.backendAddress + '/api/auth/signup', {email, password});
+        return this.http.post<{ poruka: string }>(BackendConst.backendAddress + '/api/auth/signup', {email, password});
     }
 
     login(email: string, password: string) {

@@ -1,6 +1,8 @@
 import {Slika} from './slika.model';
 import {Marka} from './marka.model';
 import {Model} from './model.model';
+import {Gorivo} from './gorivo.model';
+import {Menjac} from './menjac.model';
 
 export class OglasModel {
     id: number;
@@ -11,10 +13,10 @@ export class OglasModel {
     model: Model;
     godiste: number;
     kilometraza: number;
-    gorivo: string;
+    gorivo: Gorivo;
     snaga: number;
     kubikaza: number;
-    menjac: string;
+    menjac: Menjac;
     slike: Slika[];
     sacuvan = false;
 

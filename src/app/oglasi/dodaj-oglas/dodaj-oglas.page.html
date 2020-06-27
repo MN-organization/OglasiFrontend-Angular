@@ -42,7 +42,7 @@
 
                     <ion-item>
                         <ion-label>Marka</ion-label>
-                        <ion-select [compareWith]="compareMarke" value="notifications" interface="action-sheet" name="marka" required (ionChange)="onSelektovanaMarka($event)"
+                        <ion-select [compareWith]="comparePoID" value="notifications" interface="action-sheet" name="marka" required (ionChange)="onSelektovanaMarka($event)"
                                     formControlName="marka">
                             <ion-select-option *ngFor="let marka of marke;let i=index"
                                                [value]="marka">{{marka.marka}}</ion-select-option>
@@ -50,15 +50,15 @@
                     </ion-item>
                     <ion-item>
                         <ion-label>Modeli</ion-label>
-                        <ion-select [compareWith]="compareMarke" value="notifications" interface="action-sheet" formControlName="model"
+                        <ion-select [compareWith]="comparePoID" value="notifications" interface="action-sheet" formControlName="model"
                                     [disabled]=form.controls.marka.invalid>
                             <ion-select-option *ngFor="let model of selectedMarke" [value]="model">{{model.model}}</ion-select-option>
                         </ion-select>
                     </ion-item>
                     <ion-item>
                         <ion-label>Vrsta goriva</ion-label>
-                        <ion-select value="notifications" interface="action-sheet" formControlName="gorivo" >
-                            <ion-select-option *ngFor="let goriv of gorivo">{{goriv}}</ion-select-option>
+                        <ion-select [compareWith]="comparePoID" value="notifications" interface="action-sheet" formControlName="gorivo" >
+                            <ion-select-option *ngFor="let goriv of gorivo" [value]="goriv">{{goriv.vrstaGoriva}}</ion-select-option>
                         </ion-select>
                     </ion-item>
                     <div class="form-group">
@@ -115,8 +115,8 @@
                             <ion-label>Vrsta menjaca:</ion-label>
                         </ion-list-header>
                         <ion-item *ngFor="let menjac of menjaci">
-                            <ion-label>{{menjac}}</ion-label>
-                            <ion-radio slot="start" color="primary" value="{{menjac}}"></ion-radio>
+                            <ion-label>{{menjac.tipMenjaca}}</ion-label>
+                            <ion-radio slot="start" color="primary" [value]="menjac"></ion-radio>
                         </ion-item>
                     </ion-radio-group>
 <!--                    <ion-item>-->

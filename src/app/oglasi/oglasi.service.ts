@@ -55,8 +55,8 @@ export class OglasiService {
         );
     }
 
-    addOglas(oglas: OglasModel) {
-        this.http.post<{ oglas: OglasModel, poruka: string }>(BackendConst.backendAddress + '/api/oglasi/dodaj', {
+    addOglas(oglas: OglasModel, orderID: string) {
+        this.http.post<{ oglas: OglasModel, poruka: string }>(BackendConst.backendAddress + '/api/oglasi/dodaj/' + orderID, {
             naslov: oglas.naslov,
             opis: oglas.opis,
             cena: oglas.cena,
@@ -129,6 +129,9 @@ export class OglasiService {
         }
 
         this.isLoadingSubject.next(true);
+        if (this.kriterijumi === '') {
+            this.kriterijumi = 'id!-1';
+        }
         return this.http.get<{ oglasi: OglasModel[], poruka: string }>(BackendConst.backendAddress + '/api/oglasi/pretraga?search=(' + this.kriterijumi + ')').subscribe(
             (response) => {
                 console.log(response);
@@ -184,7 +187,7 @@ export class OglasiService {
     }
 
     posaljiSliku(slika: string | ArrayBuffer) {
-        return this.http.post<{hes: string}>
+        return this.http.post<{ hes: string }>
         (BackendConst.backendAddress + '/api/oglasi/slike/', slika).pipe(
             map(res => {
                 return res.hes;

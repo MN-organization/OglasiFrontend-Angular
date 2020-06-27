@@ -38,10 +38,12 @@ export class AuthPage implements OnInit {
     } else {
       this.authService.signup(f.value.email, f.value.password)
           .subscribe(podaci => {
+            console.log(podaci);
             this.promeni();
-            this.message = 'Uspesno registrovanje';
+            this.message = podaci.poruka;
           }, error => {
-            this.message = 'Neuspesno registrovanje';
+            console.log(error);
+            this.message = error.poruka;
           });
     }
   }

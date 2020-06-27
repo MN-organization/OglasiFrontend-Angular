@@ -9,6 +9,10 @@ import {SlikaDodavanje} from '../../modeli/slikaDodavanje.model';
 import {Slika} from '../../modeli/slika.model';
 import {Marka} from '../../modeli/marka.model';
 import {Model} from '../../modeli/model.model';
+import {GorivoService} from '../gorivo.service';
+import {MenjacService} from '../menjac.service';
+import {Gorivo} from '../../modeli/gorivo.model';
+import {Menjac} from '../../modeli/menjac.model';
 
 declare var paypal;
 
@@ -23,7 +27,10 @@ export class DodajOglasPage implements OnInit {
                 private markaModelService: MarkaModelService,
                 private router: Router,
                 private route: ActivatedRoute,
-                private fb: FormBuilder) {
+                private fb: FormBuilder,
+                private gorivoService: GorivoService,
+                private menjacService: MenjacService
+    ) {
     }
 
     // @ViewChild('f', {static: false}) addForm: NgForm;
@@ -33,11 +40,11 @@ export class DodajOglasPage implements OnInit {
 
     oglas: OglasModel = null;
 
-    menjaci = ['Manuelni', 'Automatski'];
+    menjaci: Menjac[] = [];
 
     godista: number[] = [];
 
-    gorivo = ['benzin', 'dizel', 'tng'];
+    gorivo: Gorivo[] = [];
 
     marke: Marka[] = [];
 
@@ -86,11 +93,17 @@ export class DodajOglasPage implements OnInit {
     }
 
     ngOnInit(): void {
+        this.gorivoService.getGoriva().subscribe(goriva => {
+            this.gorivo = goriva;
+        });
+        this.menjacService.getMenjaci().subscribe(menjaci => {
+            this.menjaci = menjaci;
+        });
+
         const godina = new Date().getFullYear();
         for (let i = godina; i > 1913; i--) {
             this.godista.push(i);
         }
-
         this.markaModelService.getAll()
             .subscribe(podaci => {
                 this.marke = podaci;
@@ -132,6 +145,7 @@ export class DodajOglasPage implements OnInit {
                         this.edit = false;
                     }
                 });
+                console.log(this.gorivo);
             });
 
         this.form = new FormGroup({
@@ -165,17 +179,16 @@ export class DodajOglasPage implements OnInit {
                     });
                 },
                 onApprove: async (data, actions) => {
-                    console.log(data);
-                    console.log(actions);
+                    // console.log(data);
+                    // console.log(actions);
                     this.isLoading = true;
-                    const order = await actions.order.capture();
+                    // const order = await actions.order.capture();//radimo capture na beku
                     this.paidFor = true;
-                    console.log(order);
-                    this.oglasiService.addOglas(this.oglas);
+                    // console.log(order);
+                    this.oglasiService.addOglas(this.oglas, data.orderID);
                     this.popunjenaForma = false;
                     this.isLoading = false;
                     this.form.reset();
-                    // capture treba da se odradi na beku i ako uspe onda se dodaje u bazu
                 },
                 onError: err => {
                     console.log(err);
@@ -260,7 +273,7 @@ export class DodajOglasPage implements OnInit {
         }
     }
 
-    compareMarke(m1: any, m2: any): boolean {
+    comparePoID(m1: any, m2: any): boolean {
         return m1 && m2 ? m1.id === m2.id : m1 === m2;
     }
 
