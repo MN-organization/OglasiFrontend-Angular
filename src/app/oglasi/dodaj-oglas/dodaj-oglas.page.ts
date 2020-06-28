@@ -77,6 +77,8 @@ export class DodajOglasPage implements OnInit {
         if (this.edit === true) {
             this.oglas.id = this.idOglas;
             this.oglasiService.updateOglas(this.oglas);
+            this.form.reset();
+            this.router.navigate(['/moji_oglasi']);
         } else {
             this.oglas.slike = this.listaSlika.map(slikaDod => {
                 const slika: Slika = new Slika();

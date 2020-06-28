@@ -75,6 +75,7 @@
                                 type="number"
                                 id="cena"
                                 formControlName="cena"
+                                pattern="\d+"
                         ></ion-input>
                     </ion-item>
 
@@ -84,6 +85,7 @@
                                 type="number"
                                 id="km"
                                 formControlName="kilometraza"
+                                pattern="\d+"
                         ></ion-input>
                     </ion-item>
                     <ion-item>
@@ -93,6 +95,7 @@
                                 id="ccm"
                                 formControlName="kubikaza"
                                 name="ccm"
+                                pattern="\d+"
                         ></ion-input>
                     </ion-item>
                     <ion-item>
@@ -101,6 +104,7 @@
                                 type="number"
                                 id="ks"
                                 formControlName="snaga"
+                                pattern="\d+"
                         ></ion-input>
                     </ion-item>
                     <ion-item>
@@ -129,7 +133,7 @@
 <!--                    </ion-item>-->
                     <ion-button expand="full"
                                 type="submit"
-                                [disabled]="!form.valid || this.ucitavanjeSlika">Postavi oglas
+                                [disabled]="!form.valid || this.ucitavanjeSlika">{{this.edit ? 'Izmeni' : 'Postavi'}} oglas
                     </ion-button>
                 </form>
             </div>
