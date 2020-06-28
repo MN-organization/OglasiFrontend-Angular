@@ -194,6 +194,7 @@ export class DodajOglasPage implements OnInit {
                 },
                 onError: err => {
                     console.log(err);
+                    this.isLoading = false;
                 }
             })
             .render(this.paypalElement.nativeElement);

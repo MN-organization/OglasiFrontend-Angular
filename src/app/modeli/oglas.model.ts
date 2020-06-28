@@ -3,6 +3,7 @@ import {Marka} from './marka.model';
 import {Model} from './model.model';
 import {Gorivo} from './gorivo.model';
 import {Menjac} from './menjac.model';
+import {Aktivnost} from './aktivnost.model';
 
 export class OglasModel {
     id: number;
@@ -19,6 +20,8 @@ export class OglasModel {
     menjac: Menjac;
     slike: Slika[];
     sacuvan = false;
+    aktivnost: Aktivnost;
+    aktivan: boolean;
 
     constructor() {
     }

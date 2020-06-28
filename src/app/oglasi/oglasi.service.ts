@@ -83,7 +83,9 @@ export class OglasiService {
     }
 
     pretrazi(forma: any) {
+        // const aktivan = true;
         this.kriterijumi = '';
+        // this.dodajKriterijum('aktivan:' + aktivan);
         if (forma.marka && !forma.model) {
             this.dodajKriterijum('model.marka.id:' + forma.marka.id);
         }
@@ -213,5 +215,12 @@ export class OglasiService {
         this.http.delete
         (BackendConst.backendAddress + '/api/oglasi/slike/obrisi/' + idOglas + '/' + idSlike)
             .subscribe();
+    }
+
+    obnoviOglas(oglas: OglasModel, orderID: string) {
+        return this.http.post<{poruka: string}>(BackendConst.backendAddress + '/api/oglasi/obnova/' + orderID, oglas)
+            .pipe(map(podaci => {
+                return podaci.poruka;
+            }));
     }
 }

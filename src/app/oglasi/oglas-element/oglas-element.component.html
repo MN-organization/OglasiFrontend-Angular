@@ -13,7 +13,9 @@
             </ion-col>
             <ion-col size-md="6" size-sm="6" size-xs="12">
                 <ion-card-header>
-                    <ion-card-title>{{oglas.naslov}}</ion-card-title>
+                    <ion-card-title>{{oglas.naslov}} <ion-chip *ngIf="isMyOglas && !isLoading" [color]="oglas.aktivan ? 'success' : 'danger'" class="ml-4">{{oglas.aktivan ? 'AKTIVAN' : 'NEAKTIVAN'}}</ion-chip><ion-spinner class="ml-4" name="lines" color="primary" *ngIf="isLoading" id="spiner">
+
+                    </ion-spinner></ion-card-title>
                     <ion-card-subtitle>{{oglas.godiste}}. / {{oglas.kilometraza}} km</ion-card-subtitle>
                 </ion-card-header>
 
@@ -26,11 +28,19 @@
                 <ion-button *ngIf="isMyOglas" (click)="onDelete($event)">
                     <ion-icon name="trash-outline"></ion-icon>
                 </ion-button>
+                <ion-button *ngIf="isMyOglas && !oglas.aktivan" (click)="onObnova($event)">
+                    <ion-icon name="refresh"></ion-icon>
+                </ion-button>
                 <ion-button *ngIf="this.authService.token.value && !isMyOglas" (click)="onSacuvaj($event)">
                     <ion-icon name="star-outline" *ngIf="!isSacuvan"></ion-icon>
                     <ion-icon name="star" *ngIf="isSacuvan"></ion-icon>
                 </ion-button>
             </ion-col>
         </ion-row>
+        <div [hidden]="!prikaziPaypal || oglas.aktivan || isLoading"
+             class="d-flex flex-column justify-content-center text-center">
+<!--            <h2 class="display-4 ml-2 ">Izaberite nacin placanja:</h2>-->
+            <div #paypal class="mt-4"></div>
+        </div>
     </ion-grid>
 </ion-card>
