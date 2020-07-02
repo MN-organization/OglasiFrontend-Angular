@@ -36,6 +36,9 @@ export class AppComponent implements OnInit{
 
   ngOnInit(): void {
     this.authService.autoLogin();
+    setInterval(()=>{
+      this.authService.refresujToken();
+    }, 10000);
   }
 
   onDarkMode() {
