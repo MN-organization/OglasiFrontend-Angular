@@ -94,7 +94,7 @@ export class OglasiService {
             this.dodajKriterijum('model.id:' + forma.model.id);
         }
         if (forma.gorivo) {
-            this.dodajKriterijum('gorivo:' + forma.gorivo);
+            this.dodajKriterijum('gorivo.vrstaGoriva:' + forma.gorivo.vrstaGoriva);
         }
         if (forma.cenaOd) {
             this.dodajKriterijum('cena>' + forma.cenaOd);
@@ -127,7 +127,7 @@ export class OglasiService {
             this.dodajKriterijum('godiste<' + forma.godDo);
         }
         if (forma.menjac) {
-            this.dodajKriterijum('menjac:>' + forma.menjac);
+            this.dodajKriterijum('menjac.tipMenjaca:' + forma.menjac.tipMenjaca);
         }
 
         this.isLoadingSubject.next(true);

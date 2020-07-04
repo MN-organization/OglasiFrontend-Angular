@@ -37,7 +37,7 @@
                             <ion-label>Vrsta goriva</ion-label>
                             <ion-select value="notifications" interface="action-sheet" name="gorivo"
                                         formControlName="gorivo" (ionCancel)="onGorivoCancel()">
-                                <ion-select-option *ngFor="let goriv of gorivo">{{goriv}}</ion-select-option>
+                                <ion-select-option *ngFor="let goriv of gorivo " [value]="goriv">{{goriv.vrstaGoriva}}</ion-select-option>
                             </ion-select>
                         </ion-item>
                         <ion-row>
@@ -169,8 +169,8 @@
                                 <ion-label>Vrsta menjaca:</ion-label>
                             </ion-list-header>
                             <ion-item *ngFor="let menjac of menjaci">
-                                <ion-label>{{menjac}}</ion-label>
-                                <ion-radio slot="start" color="primary" value="{{menjac}}"></ion-radio>
+                                <ion-label>{{menjac.tipMenjaca}}</ion-label>
+                                <ion-radio slot="start" color="primary" [value]="menjac"></ion-radio>
                             </ion-item>
                         </ion-radio-group>
                         <br>

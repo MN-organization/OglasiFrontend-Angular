@@ -5,6 +5,10 @@ import {OglasiService} from '../oglasi.service';
 import {Router} from '@angular/router';
 import {Marka} from '../../modeli/marka.model';
 import {Model} from '../../modeli/model.model';
+import {Gorivo} from '../../modeli/gorivo.model';
+import {Menjac} from '../../modeli/menjac.model';
+import {GorivoService} from '../gorivo.service';
+import {MenjacService} from '../menjac.service';
 
 @Component({
     selector: 'app-pretraga',
@@ -17,20 +21,26 @@ export class PretragaPage implements OnInit {
 
     izabran: Marka;
 
-    menjaci = ['Manuelni', 'Automatski'];
+    menjaci: Menjac[] = [];
 
     godista: number[] = [];
 
-    gorivo = ['benzin', 'dizel', 'tng'];
+    gorivo : Gorivo[] = [];
 
     marke: Marka[] = [];
 
     selectedMarke: Model[] = [];
 
-    constructor(private markaModelService: MarkaModelService, private oglasiService: OglasiService, private router: Router) {
+    constructor(private markaModelService: MarkaModelService, private oglasiService: OglasiService, private router: Router, private gorivoService: GorivoService, private menjacService: MenjacService) {
     }
 
     ngOnInit() {
+        this.gorivoService.getGoriva().subscribe(goriva => {
+            this.gorivo = goriva;
+        });
+        this.menjacService.getMenjaci().subscribe(menjaci => {
+            this.menjaci = menjaci;
+        });
         this.form = new FormGroup({
             marka: new FormControl(null),
             model: new FormControl(null),
