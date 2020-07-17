@@ -12,17 +12,23 @@ export class OglasDetailsPage implements OnInit {
 
     @Input() public oglas: OglasModel;
     oglasId: number;
+    isLoading = true;
 
     constructor(private oglasiService: OglasiService,
                 private activatedRoute: ActivatedRoute) {
     }
 
     ngOnInit() {
+        this.isLoading = true;
         this.activatedRoute.params.subscribe((params) => {
                 this.oglasId = params.id;
             }
         );
-        this.oglasiService.getOglas(this.oglasId).subscribe((oglas) => this.oglas = oglas);
+        this.oglasiService.getOglas(this.oglasId).subscribe((oglas) => {
+                this.oglas = oglas;
+                this.isLoading = false;
+            }
+        );
     }
 
 }

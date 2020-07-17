@@ -1,27 +1,34 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="/oglasi">
-      </ion-back-button>
-<!--      <ion-menu-button></ion-menu-button>-->
-    </ion-buttons>
-    <ion-title>
-      Prodaja automobila MNN
-    </ion-title>
-  </ion-toolbar>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-back-button defaultHref="/oglasi">
+            </ion-back-button>
+            <!--      <ion-menu-button></ion-menu-button>-->
+        </ion-buttons>
+        <ion-title>
+            Prodaja automobila MNN
+        </ion-title>
+    </ion-toolbar>
 </ion-header>
-
 <ion-content>
+    <ion-spinner name="lines" color="primary" *ngIf="isLoading" id="spiner"></ion-spinner>
     <ion-grid>
-        <ion-row>
+        <ion-card *ngIf="!this.oglas && !this.isLoading">
+            <ion-card-header>
+                <ion-card-title>
+                    <ion-icon name="search"></ion-icon>
+                    Oglas nije pronadjen!
+                </ion-card-title>
+            </ion-card-header>
+        </ion-card>
+
+
+        <ion-row *ngIf="this.oglas && !this.isLoading">
             <ion-col push-lg="3" sizeLg="6" push-md="2" sizeMd="8" sizeXs="12">
                 <ion-slides pager="true">
                     <ion-slide *ngFor="let slicica of oglas?.slike">
                         <img [src]="slicica.slika"/>
                     </ion-slide>
-<!--                    <ion-slide>-->
-<!--                        <img [attr.src]="oglas?.slika"/>-->
-<!--                    </ion-slide>-->
                 </ion-slides>
 
                 <ion-card>
@@ -41,10 +48,6 @@
                             <ion-col>Model:</ion-col>
                             <ion-col>{{oglas?.model.model}}</ion-col>
                         </ion-row>
-<!--                        <ion-row>-->
-<!--                            <ion-col>Cena:</ion-col>-->
-<!--                            <ion-col>{{oglas?.cena}} €</ion-col>-->
-<!--                        </ion-row>-->
                         <ion-row>
                             <ion-col>Kilometraza:</ion-col>
                             <ion-col>{{oglas?.kilometraza}} km</ion-col>

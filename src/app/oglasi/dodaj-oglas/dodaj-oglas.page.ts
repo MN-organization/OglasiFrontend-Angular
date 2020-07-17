@@ -1,9 +1,8 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, NgForm, Validators} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {OglasModel} from '../../modeli/oglas.model';
 import {OglasiService} from '../oglasi.service';
 import {MarkaModelService} from '../marka-model.service';
-import {Subscription} from 'rxjs';
 import {ActivatedRoute, Router} from '@angular/router';
 import {SlikaDodavanje} from '../../modeli/slikaDodavanje.model';
 import {Slika} from '../../modeli/slika.model';
