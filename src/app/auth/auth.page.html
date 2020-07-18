@@ -42,13 +42,13 @@
                         type="submit"
                         fill="outline"
                         expand="block"
-                        [disabled]="!f.valid">{{isLogin ? 'Login' : 'Sign up'}}
+                        [disabled]="!f.valid">{{isLogin ? 'Prijava' : 'Registracija'}}
             </ion-button>
             <ion-button expand="full"
                         expand="block"
                         type="button"
                         (click)="promeni()"
-                        >Prebaci na {{!isLogin ? 'Login' : 'Sign up'}}
+                        >Prebaci na {{!isLogin ? 'prijavu' : 'registraciju'}}
             </ion-button>
           </div>
         </form>
